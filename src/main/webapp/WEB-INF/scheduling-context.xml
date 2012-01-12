@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:task="http://www.springframework.org/schema/task" 
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+	   		http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+	   		http://www.springframework.org/schema/task
+			http://www.springframework.org/schema/task/spring-task-3.0.xsd">
+			
+	<!-- Spring's scheduling support -->
+	<task:scheduled-tasks scheduler="taskScheduler">
+		<task:scheduled ref="fixedDelayService" method="performService" fixed-delay="5000"/>
+		<task:scheduled ref="fixedRateService" method="performService" fixed-rate="5000"/>
+    	<task:scheduled ref="cronService" method="performService" cron="*/5 * * * * ?"/>
+	</task:scheduled-tasks>
+	
+	<!-- The bean that does the actual work -->
+	<bean id="fixedDelayService" class="com.dimitrisli.springmvc.scheduling.FixedDelayServiceImpl" />
+	<bean id="fixedRateService" class="com.dimitrisli.springmvc.scheduling.FixedRateServiceImpl" />
+	<bean id="cronService" class="com.dimitrisli.springmvc.scheduling.CronServiceImpl" />
+	
+	<!-- Defines a ThreadPoolTaskScheduler instance with configurable pool size. -->
+	<task:scheduler id="taskScheduler" pool-size="1"/>      
+	        
+</beans>
